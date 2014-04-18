@@ -10,7 +10,17 @@
 		regional['altField'] = $(this);
 		regional['altFormat'] = 'yy-mm-dd';
 		datepicker.datepicker(regional);
-		
+
+		// When a date is selected in the first datepicker, use that as the
+		// default in the second.
+		var id = $(this).attr('id');
+		if ( id.match(/__gte$/) ) {
+			var $lte = $("#" + id.replace('__gte', '__lte') + '__alt');
+			datepicker.datepicker('option', 'onSelect', function(date) {
+				$lte.datepicker('option', 'defaultDate', date);
+			});
+		}
+
 		// One would expect datepicker to update the alternate field 
 		// automatically, but apparently it doesn't. It's probably me missing
 		// something. Update it manually instead.
