@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.admin.filters import SimpleListFilter
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.translation import ugettext_lazy as _
@@ -49,7 +49,7 @@ class FiltrateFilter(SimpleListFilter):
         """Replicates the get parameters as hidden form fields."""
         s = '<input type="hidden" name="%s" value="%s"/>'
         _omitted_fields = tuple(omitted_fields) + ('e',)
-        return "".join([s % (k, v) for k, v in self.request.GET.iteritems()
+        return "".join([s % (k, v) for k, v in self.request.GET.items()
                         if k not in _omitted_fields])
 
     def lookups(self, request, model_admin):
@@ -183,7 +183,7 @@ class TreeFilter(FiltrateFilter):
             for node in tree:
                 if type(node) == type(tuple()):
                     # Is a parent node.
-                    title = force_unicode(node[0])
+                    title = force_text(node[0])
                     new_tree = []
                     cur_tree.append({
                         'data': title,
@@ -197,7 +197,7 @@ class TreeFilter(FiltrateFilter):
                             "obj_id": node.pk, 
                             "is_selected": node.pk in self.selected_nodes,
                         },                   
-                        'data': force_unicode(node),
+                        'data': force_text(node),
                     })
 
         json_tree = []
